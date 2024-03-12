@@ -27,20 +27,20 @@ public class project {
                 for (String token : tokens) {
                     try {
                         int number = Integer.parseInt(token);
-                        numbers.add(number);
-                        if (numbers.size() > 10000) {
-                            System.out.println("Помилка: кількість чисел перевищує максимальний розмір");
-                            return;
-                        }
+                        if (number > 32767)
+                            number = 32767;
+                        if (number < -32768)
+                            number = -32768;
+                        binaryNumbers.add(Integer.toBinaryString(0xFFFF & number));
                     } catch (NumberFormatException e) {
                         System.out.println("Помилка: Введено нечислове значення");
                     }
                 }
             }
 
-            System.out.println("Зчитані числа:");
-            for (Integer number : numbers) {
-                System.out.println(number);
+            System.out.println("Бінарні представлення чисел:");
+            for (String binary : binaryNumbers) {
+                System.out.println(binary);
             }
 
         } catch (FileNotFoundException e) {
