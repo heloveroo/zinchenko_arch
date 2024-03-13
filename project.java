@@ -14,7 +14,7 @@ public class project {
 
         try {
             scanner = new Scanner(file);
-            ArrayList<Integer> numbers = new ArrayList<>();
+            ArrayList<String> binaryNumbers = new ArrayList<>();
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -31,7 +31,10 @@ public class project {
                             number = 32767;
                         if (number < -32768)
                             number = -32768;
-                        binaryNumbers.add(Integer.toBinaryString(0xFFFF & number));
+                        binaryNumbers
+                                .add(String.format("%16s", Integer.toBinaryString(0xFFFF & number)).replace(' ', '0')); // Додавання
+                                                                                                                        // ведучих
+                                                                                                                        // нулів
                     } catch (NumberFormatException e) {
                         System.out.println("Помилка: Введено нечислове значення");
                     }
