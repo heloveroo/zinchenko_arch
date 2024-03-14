@@ -45,7 +45,7 @@ public class projects2 {
         boolean swapped = true;
         int j = 0;
         String tmp;
-        while (swapped) {2
+        while (swapped) {
             swapped = false;
             j++;
             for (int i = 0; i < array.size() - j; i++) {
