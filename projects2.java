@@ -20,18 +20,34 @@ public class projects2 {
                 number = -32768;
             numbers.add(number);
         }
+// Виведення чисел до сортування
+System.out.println("Numbers before sorting: " + numbers);
 
+// Сортування
+Collections.sort(numbers);
+
+// Виведення чисел після сортування
+System.out.println("Numbers after sorting: " + numbers);
+        // Спочатку сортуємо десяткові числа
+        Collections.sort(numbers);
+
+        // Потім конвертуємо відсортовані числа в бінарний формат
         ArrayList<String> binaryNumbers = new ArrayList<>();
         for (int number : numbers) {
             binaryNumbers.add(toBinary(number));
         }
 
-        bubbleSort(binaryNumbers);
+        // Обчислення медіани та середнього значення на основі відсортованих десяткових чисел
+        double median = calculateMedian(numbers); // Змінили на вхідний список десяткових чисел
+        double average = calculateAverage(numbers); // Змінили на вхідний список десяткових чисел
+
+        System.out.println((int)median); // Вивід медіани в консоль
+        System.out.println((int)average); // Вивід середнього значення в консоль
 
         // Запис результатів у файл
         try (FileWriter writer = new FileWriter("result.txt")) {
-            writer.write("mediana: " + calculateMedian(binaryNumbers) + "\n");
-            writer.write("Average: " + calculateAverage(binaryNumbers) + "\n");
+            writer.write("Mediana: " + median + "\n");
+            writer.write("Average: " + average + "\n");
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());
         }
@@ -41,40 +57,21 @@ public class projects2 {
         return String.format("%16s", Integer.toBinaryString(0xFFFF & number)).replace(' ', '0');
     }
 
-    private static void bubbleSort(ArrayList<String> array) {
-        boolean swapped = true;
-        int j = 0;
-        String tmp;
-        while (swapped) {
-            swapped = false;
-            j++;
-            for (int i = 0; i < array.size() - j; i++) {
-                if (array.get(i).compareTo(array.get(i + 1)) > 0) {
-                    tmp = array.get(i);
-                    array.set(i, array.get(i + 1));
-                    array.set(i + 1, tmp);
-                    swapped = true;
-                }
-            }
-        }
-    }
-
-    private static double calculateMedian(ArrayList<String> binaryNumbers) {
-        int size = binaryNumbers.size();
-        Collections.sort(binaryNumbers);
+    // Змінені методи для роботи з десятковими числами
+    private static double calculateMedian(ArrayList<Integer> numbers) {
+        int size = numbers.size();
         if (size % 2 == 0) {
-            return (Integer.parseInt(binaryNumbers.get(size / 2 - 1), 2)
-                    + Integer.parseInt(binaryNumbers.get(size / 2), 2)) / 2.0;
+            return (numbers.get(size / 2 - 1) + numbers.get(size / 2)) / 2.0;
         } else {
-            return Integer.parseInt(binaryNumbers.get(size / 2), 2);
+            return numbers.get(size / 2);
         }
     }
 
-    private static double calculateAverage(ArrayList<String> binaryNumbers) {
+    private static double calculateAverage(ArrayList<Integer> numbers) {
         double sum = 0;
-        for (String binary : binaryNumbers) {
-            sum += Integer.parseInt(binary, 2);
+        for (int number : numbers) {
+            sum += number;
         }
-        return sum / binaryNumbers.size();
+        return sum / numbers.size();
     }
 }

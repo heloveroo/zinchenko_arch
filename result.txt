@@ -1,2 +1,2 @@
-mediana: 4.0
-Average: 4.25
+Mediana: 2.0
+Average: 4.0
