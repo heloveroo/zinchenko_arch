@@ -13,20 +13,36 @@ error           DB "Error", '$'
 .CODE
 MAIN PROC
     ; Відкриття файлу-джерела
-    mov ah, 3Dh
-    mov al, 0                       ; Режим читання
-    lea dx, sourceFilename
+    mov ah, 02h
+    mov dl, '0'
     int 21h
-    mov sourceHandle, ax            ; Зберігання дескриптора файлу-джерела
-
+    mov ah, 3Fh
+    mov bx, 0h  ; stdin handle
+    mov cx, 1   ; 1 byte to read
+    mov dx, offset oneChar   ; read to ds:dx 
+    int 21h   ;  ax = number of bytes read
+    ; do something with [oneChar]
+    or ax,ax
+    jnz read_next
     ; Створення або відкриття цільового файлу
     mov ah, 3Ch
     mov cx, 0                       ; Атрибути файлу
     lea dx, targetFilename
     int 21h
     mov targetHandle, ax            ; Зберігання дескриптора цільового файлу
-
+    mov ax, 7FFFh
+    add ax, 0FFFh
+    ;середнє значення 16біт 
+    xor dx,dx       ; DX - 32-bit hi-word
+    mov ax, 7FFFh   ; AX - 32-bit lo-word
+    add ax, 7FFFh   ; add 16bit signed value
+    adc dx, 0       ; note that OF=0! 
     ; Читання з файлу-джерела і запис у цільовий файл
+    ;середнє значення 32 біт
+    mov dx, 0FFh
+    mov ax, 0h
+    mov bx, 1500
+    div bx  ; DX:AX / 1500, result in ax
 read_loop:
     mov ah, 3Fh
     mov bx, sourceHandle
