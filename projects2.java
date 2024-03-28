@@ -1,8 +1,5 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Collections;
 
 public class projects2 {
 
@@ -10,54 +7,53 @@ public class projects2 {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Integer> numbers = new ArrayList<>();
 
-        // Читання чисел до EOF
+        // Reading numbers until EOF
         while (scanner.hasNextInt()) {
             int number = scanner.nextInt();
-            // Обмеження значення в межах 16-бітного діапазону
-            if (number > 32767)
+            // Limiting the value within the 16-bit range
+            if (number > 32767) {
                 number = 32767;
-            else if (number < -32768)
+            } else if (number < -32768) {
                 number = -32768;
+            }
             numbers.add(number);
         }
-// Виведення чисел до сортування
-System.out.println("Numbers before sorting: " + numbers);
 
-// Сортування
-Collections.sort(numbers);
+        // Sorting the decimal numbers before converting to binary format
+        bubbleSortIntegers(numbers);
 
-// Виведення чисел після сортування
-System.out.println("Numbers after sorting: " + numbers);
-        // Спочатку сортуємо десяткові числа
-        Collections.sort(numbers);
-
-        // Потім конвертуємо відсортовані числа в бінарний формат
+        // Converting sorted numbers to binary format
         ArrayList<String> binaryNumbers = new ArrayList<>();
         for (int number : numbers) {
             binaryNumbers.add(toBinary(number));
         }
 
-        // Обчислення медіани та середнього значення на основі відсортованих десяткових чисел
-        double median = calculateMedian(numbers); // Змінили на вхідний список десяткових чисел
-        double average = calculateAverage(numbers); // Змінили на вхідний список десяткових чисел
-
-        System.out.println((int)median); // Вивід медіани в консоль
-        System.out.println((int)average); // Вивід середнього значення в консоль
-
-        // Запис результатів у файл
-        try (FileWriter writer = new FileWriter("result.txt")) {
-            writer.write("Mediana: " + median + "\n");
-            writer.write("Average: " + average + "\n");
-        } catch (IOException e) {
-            System.out.println("Error writing to file: " + e.getMessage());
-        }
+        // Calculating and displaying median and average values
+        double median = calculateMedian(numbers);
+        double average = calculateAverage(numbers);
+        System.out.println((int) median); // Displaying the median in the console
+        System.out.println((int) average); // Displaying the average in the console
     }
 
+    // Bubble sort for integers
+    private static void bubbleSortIntegers(ArrayList<Integer> arr) {
+        int n = arr.size();
+        for (int i = 0; i < n - 1; i++)
+            for (int j = 0; j < n - i - 1; j++)
+                if (arr.get(j) > arr.get(j + 1)) {
+                    // Swap arr[j+1] and arr[j]
+                    int temp = arr.get(j);
+                    arr.set(j, arr.get(j + 1));
+                    arr.set(j + 1, temp);
+                }
+    }
+
+    // Converting to binary with padding to ensure 16 characters
     private static String toBinary(int number) {
         return String.format("%16s", Integer.toBinaryString(0xFFFF & number)).replace(' ', '0');
     }
 
-    // Змінені методи для роботи з десятковими числами
+    // Calculating median
     private static double calculateMedian(ArrayList<Integer> numbers) {
         int size = numbers.size();
         if (size % 2 == 0) {
@@ -67,6 +63,7 @@ System.out.println("Numbers after sorting: " + numbers);
         }
     }
 
+    // Calculating average
     private static double calculateAverage(ArrayList<Integer> numbers) {
         double sum = 0;
         for (int number : numbers) {
