@@ -5,6 +5,9 @@
 array DW 2 10 0 -2
 count DW 4
 oneChar DB ?
+R DB ?                        ; Остача від ділення
+Q DB ?                        ; Ціла частина від ділення
+sum DW 0                     ; Сума елементів масиву для розрахунку середнього значення
 .CODE
 MAIN PROC
     mov ah, 02h
@@ -55,6 +58,22 @@ nextStep:
 
     pop cx
     loop outerLoops
+
+    ; Розрахунок середнього значення
+    lea si, array
+    mov cx, count
+sumLoop:
+    mov ax, [si]
+    add sum, ax
+    add si, 2
+    loop sumLoop
+
+    mov ax, sum
+    cwd                      ; Конвертує слово в декс
+    idiv count               ; Ділить AX на count, результат в AX, остача в DX
+
+    mov Q, al                ; Зберігає цілу частину
+    mov R, ah                ; Зберігає остачу
 
 mov ax, 4c00h           ;вихід з програми
     int 21h
