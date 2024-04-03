@@ -104,7 +104,45 @@ sumLoop:
     mov Q, al                ; Зберігає цілу частину
     mov R, ah                ; Зберігає остачу
 
+
+    call calculateMedian     ; Виклик процедури розрахунку медіани
+
 mov ax, 4c00h           ;вихід з програми
     int 21h
 MAIN ENDP
 END MAIN
+
+calculateMedian proc
+    ; Очищення регістрів
+    call clearRegisters
+
+    ; Завантаження кількості чисел для обчислення медіани
+    mov bx, count
+    mov ax, bx
+    and ax, 1
+    jz evenAmount
+    jnz oddAmount
+
+evenAmount:
+    ; Для парної кількості елементів
+    shr bx, 1
+    lea si, array
+    mov dx, [si+bx*2-2]      ; Беремо нижнє середнє значення
+    mov ax, [si+bx*2]        ; Додаємо до нього верхнє середнє значення
+    add dx, ax
+    shr dx, 1                ; Ділимо суму на два
+    jmp medianEnd
+
+oddAmount:
+    ; Для непарної кількості елементів
+    shr bx, 1
+    lea si, array
+    mov dx, [si+bx*2]        ; Беремо центральне значення
+
+medianEnd:
+    ; Виведення медіани
+    ; [Тут має бути код для виведення медіани]
+    ret
+calculateMedian endp
+
+end MAIN
