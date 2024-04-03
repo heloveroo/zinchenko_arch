@@ -2,13 +2,8 @@
 .STACK 100h
 
 .DATA
-sourceFilename  DB 'array.txt',0       ; Назва файлу-джерела
-targetFilename  DB 'resultreadingasm.txt',0       ; Назва цільового файлу
-buffer          DB 100 DUP (?)          ; Буфер для зберігання даних
-readBytes       DW ?                    ; Кількість байтів, які було прочитано
-sourceHandle    DW ?                    ; Дескриптор файлу-джерела
-targetHandle    DW ?                    ; Дескриптор цільового файлу
-error           DB "Error", '$'
+array DW 2 10 0 -2
+count DW 4
 
 .CODE
 MAIN PROC
@@ -38,11 +33,7 @@ MAIN PROC
     add ax, 7FFFh   ; add 16bit signed value
     adc dx, 0       ; note that OF=0! 
     ; Читання з файлу-джерела і запис у цільовий файл
-    ;середнє значення 32 біт
-    mov dx, 0FFh
-    mov ax, 0h
-    mov bx, 1500
-    div bx  ; DX:AX / 1500, result in ax
+    
 read_loop:
     mov ah, 3Fh
     mov bx, sourceHandle
@@ -61,17 +52,17 @@ read_loop:
     int 21h
     jmp read_loop                   ; Продовження читання і запису
     ; Перевірка, чи число більше 32767
-cmp ax, 32767
-jg set_max
-cmp ax, -32768
-jl set_min
-jmp next_part
-set_max:
-mov ax, 32767
-jmp next_part
-set_min:
-mov ax, -32768
-next_part:
+    cmp ax, 32767
+    jg set_max
+    cmp ax, -32768
+    jl set_min
+    jmp next_part
+    set_max:
+    mov ax, 32767
+    jmp next_part
+    set_min:
+    mov ax, -32768
+    next_part:
 
 close_files:
     ; Закриття файлу-джерела
